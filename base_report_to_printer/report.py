@@ -42,13 +42,15 @@ class Report(models.Model):
             raise exceptions.Warning(
                 _('No printer configured to print this report.')
             )
-        return printer.print_document(report, document, report.report_type)
+        return printer.with_context(context).print_document(
+            report, document, report.report_type)
 
     @api.v8
     def print_document(self, records, report_name, html=None, data=None):
-        return self._model.print_document(self._cr, self._uid,
-                                   records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+        return self._model.print_document(
+            self._cr, self._uid,
+            records.ids, report_name,
+            html=html, data=data, context=self._context)
 
     def _can_print_report(self, cr, uid, ids, behaviour, printer, document,
                           context=None):

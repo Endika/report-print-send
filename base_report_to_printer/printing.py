@@ -22,14 +22,20 @@
 #
 ##############################################################################
 import logging
+_logger = logging.getLogger(__name__)
+
 import os
 from tempfile import mkstemp
-import cups
+
+try:
+    import cups
+except ImportError:
+    _logger.debug('Cannot `import cups`.')
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 from openerp.tools.config import config
 
-_logger = logging.getLogger(__name__)
 CUPS_HOST = config.get('cups_host', 'localhost')
 CUPS_PORT = int(config.get('cups_port', 631))  # config.get returns a string
 
@@ -108,15 +114,17 @@ class PrintingPrinter(models.Model):
             self.write(vals)
 
     @api.multi
-    def print_options(self, report, format):
+    def print_options(self, report, format, copies=1):
         """ Hook to set print options """
         options = {}
         if format == 'raw':
             options['raw'] = 'True'
+        if copies > 1:
+            options['copies'] = str(copies)
         return options
 
     @api.multi
-    def print_document(self, report, content, format):
+    def print_document(self, report, content, format, copies=1):
         """ Print a file
 
         Format could be pdf, qweb-pdf, raw, ...
@@ -142,7 +150,7 @@ class PrintingPrinter(models.Model):
                     "you can reach it from the Odoo server.")
                 % (CUPS_HOST, CUPS_PORT))
 
-        options = self.print_options(report, format)
+        options = self.print_options(report, format, copies)
 
         _logger.debug(
             'Sending job to CUPS printer %s on %s'

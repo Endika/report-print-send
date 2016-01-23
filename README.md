@@ -10,3 +10,20 @@ This project aim to deal with modules related to manage document printing and se
  - Add an printing queue
  - Allow to choose printer
  - ...
+
+[//]: # (addons)
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[base_report_to_printer](base_report_to_printer/) | 8.0.0.2.0 | Report to printer
+[printer_tray](printer_tray/) | 8.0.1.0.1 | Report to printer - Paper tray selection
+
+Unported addons
+---------------
+addon | version | summary
+--- | --- | ---
+[pingen](pingen/) | 1.0 (unported) | pingen.com integration
+[pingen_document](pingen_document/) | 1.0 (unported) | pingen.com integration (document)
+
+[//]: # (end addons)
